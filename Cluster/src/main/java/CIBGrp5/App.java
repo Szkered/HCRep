@@ -8,21 +8,24 @@ import java.util.Queue;
 
 public class App {
     public static void main( String[] args ) {
-	HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
-	Map<Integer, String> customers = hazelcastInstance.getMap( "customers" );
-	customers.put( 1, "A" );
-	customers.put( 2, "B" );
-	customers.put( 3, "C" );
+	HazelcastInstance Instance = Hazelcast.newHazelcastInstance();
 
-	System.out.println( "Customer with key 1: " + customers.get(1) );
-	System.out.println( "Map Size:" + customers.size() );
+	// Map
+	// Map<Integer, String> map = Instance.getMap("a");
+	// map.put( 1, "A" );
+	// map.put( 2, "B" );
+	// map.put( 3, "C" );
 
-	Queue<String> queueCustomers = hazelcastInstance.getQueue( "customers" );
-	queueCustomers.offer( "Tom" );
-	queueCustomers.offer( "Mary" );
-	queueCustomers.offer( "Jane" );
-	System.out.println( "First customer: " + queueCustomers.poll() );
-	System.out.println( "Second customer: "+ queueCustomers.peek() );
-	System.out.println( "Queue size: " + queueCustomers.size() );
+	// System.out.println( "Customer with key 1: " + map.get(1) );
+	// System.out.println( "Map Size:" + map.size() );
+
+	//Queue
+	Queue<String> q = Instance.getQueue( "queue" );
+	q.offer( "Je" );
+	q.offer( "Te" );
+	q.offer( "Veux" );
+	System.out.println( "1: " + q.poll() );
+	System.out.println( "2: "+ q.peek() );
+	System.out.println( "queue size: " + q.size() );
     }
 }
