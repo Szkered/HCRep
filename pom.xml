@@ -17,7 +17,6 @@
   <modules>
     <module>Cluster</module>
     <module>Client</module>
-    <module>Listener</module>
   </modules>
   
 </project>
