@@ -55,7 +55,7 @@ public class App {
     }
 
     public static boolean updateIsLocal(Member member){
-	for(m : Instance.getCluster().getMembers()){
+	for(Member m : Instance.getCluster().getMembers()){
 	    if(m == member) {
 		return true;
 	    }
