@@ -14,14 +14,16 @@ public class Updater {
     private static Updater instance;
     private static HazelcastInstance hzInstance;
     private static String targetCluster;
+    private static String name;
+    private static String password;
 
-    private Updater(String address) {
+    private Updater(String address, String name, String password) {
     	// init updater
 	List<String> address_list = new ArrayList<String>();
 	address_list.add(address);
 	
 	ClientConfig clientConfig = new ClientConfig();
-	clientConfig.getGroupConfig().setName("d1").setPassword("d1");
+	clientConfig.getGroupConfig().setName(name).setPassword(password);
 	clientConfig.getNetworkConfig().setAddresses(address_list);
 	
 	hzInstance = HazelcastClient.newHazelcastClient(clientConfig);	
@@ -29,7 +31,7 @@ public class Updater {
 
     public static Updater getInstance(){
 	if(instance == null) {
-	    instance = new Updater(targetCluster);
+	    instance = new Updater(targetCluster, name, password);
 	}
 	else {}
 	return instance;
@@ -39,6 +41,17 @@ public class Updater {
 	System.out.println("[info] (" + Updater.class.getSimpleName() + " setTargetCluster) -> " + address);
 	targetCluster = address;
     }
+    
+    public static void setName(String name) {
+	System.out.println("[info] (" + Updater.class.getSimpleName() + " setName) -> " + name);
+	name = name;
+    }
+    
+    public static void setPassword(String password) {
+	System.out.println("[info] (" + Updater.class.getSimpleName() + " setPassword) -> " + password);
+	password = password;
+    }
+    
 
     public void updateAdd(EntryEvent ee) {
 	IMap map = hzInstance.getMap(ee.getName());

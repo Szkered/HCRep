@@ -10,14 +10,14 @@ public class App {
 
     // private static final String TARGET = "128.199.169.148:5701";
     // private static final String TARGET = "10.242.159.23:5701";
-    private static final String TARGET = "localhost:5701";
+    private static final String TARGET = "localhost:5702";
     private static HazelcastInstance Instance;
     
     public static void main( String[] args ) {
 	Config cfg = new Config();
 	cfg.getGroupConfig()
-	    .setName("d2")
-	    .setPassword("d2");
+	    .setName("d1")
+	    .setPassword("d1");
 	NetworkConfig netcfg = new NetworkConfig();
 	netcfg.setPort(5702);
 	JoinConfig join = netcfg.getJoin();
@@ -29,6 +29,8 @@ public class App {
 	cfg.setNetworkConfig(netcfg);
 
 	Updater.setTargetCluster(TARGET);
+	Updater.setName("d2");
+	Updater.setPassword("d2");
 	
 	Instance = Hazelcast.newHazelcastInstance(cfg);
 
