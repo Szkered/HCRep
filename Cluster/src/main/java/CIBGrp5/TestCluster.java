@@ -6,33 +6,15 @@ import com.hazelcast.config.*;
 import java.util.Map;
 import java.util.Queue;
 
-public class App {
+public class TestCluster {
 
     // private static final String TARGET = "128.199.169.148:5701";
     // private static final String TARGET = "10.242.159.23:5701";
-    private static final String TARGET = "localhost:5702";
+    // private static final String TARGET = "localhost:5702";
     private static HazelcastInstance Instance;
     
     public static void main( String[] args ) {
-	Config cfg = new Config();
-	cfg.getGroupConfig()
-	    .setName("d1")
-	    .setPassword("d1");
-	NetworkConfig netcfg = new NetworkConfig();
-	netcfg.setPort(5702);
-	JoinConfig join = netcfg.getJoin();
-	join.getMulticastConfig()
-	    .setEnabled(true);
-	join.getTcpIpConfig()
-	    .setEnabled(false) // addr to fill
-	    .addMember(TARGET);
-	cfg.setNetworkConfig(netcfg);
-
-	Updater.setTargetCluster(TARGET);
-	Updater.setName("d2");
-	Updater.setPassword("d2");
-	
-	Instance = Hazelcast.newHazelcastInstance(cfg);
+	init(1);
 
 	// Map
 	IMap<Integer, Long> map = Instance.getMap("timestamp");
@@ -40,8 +22,6 @@ public class App {
 	map.put( 1, num );
 	map.addEntryListener(new myEntryListener(), true);
 	System.out.println("EntryListener registered");
-	
-	
 
 	// System.out.println( "Customer with key 1: " + map.get(1) );
 	// System.out.println( "Map Size:" + map.size() );
@@ -54,6 +34,38 @@ public class App {
 	// System.out.println( "1: " + q.poll() );
 	// System.out.println( "2: "+ q.peek() );
 	// System.out.println( "queue size: " + q.size() );
+    }
+
+    public static void init(int num){
+	Integer port = 5700 + num;
+	Integer targetPort;
+	
+	Config cfg = new Config();
+	cfg.getGroupConfig()
+	    .setName(port.toString())
+	    .setPassword(port.toString());
+	
+	NetworkConfig netcfg = new NetworkConfig();
+	netcfg.setPort(port);
+	JoinConfig join = netcfg.getJoin();
+	join.getMulticastConfig()
+	    .setEnabled(true);
+	join.getTcpIpConfig()
+	    .setEnabled(false); // addr to fill
+	    // .addMember(TARGET);
+	cfg.setNetworkConfig(netcfg);
+
+	if(num == 1){
+	    targetPort = 5702;
+	}
+	else {
+	    targetPort = 5701;
+	}
+	Updater.setTargetCluster("localhost:" + targetPort.toString());
+	Updater.setName(targetPort.toString());
+	Updater.setPassword(targetPort.toString());   
+	
+	Instance = Hazelcast.newHazelcastInstance(cfg);
     }
 
     public static boolean updateIsLocal(Member member){

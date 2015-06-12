@@ -42,14 +42,14 @@ public class Updater {
 	targetCluster = address;
     }
     
-    public static void setName(String name) {
-	System.out.println("[info] (" + Updater.class.getSimpleName() + " setName) -> " + name);
-	name = name;
+    public static void setName(String n) {
+	System.out.println("[info] (" + Updater.class.getSimpleName() + " setName) -> " + n);
+	name = n;
     }
     
-    public static void setPassword(String password) {
-	System.out.println("[info] (" + Updater.class.getSimpleName() + " setPassword) -> " + password);
-	password = password;
+    public static void setPassword(String p) {
+	System.out.println("[info] (" + Updater.class.getSimpleName() + " setPassword) -> " + p);
+	password = p;
     }
     
 

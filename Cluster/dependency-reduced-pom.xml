@@ -23,7 +23,7 @@
         <configuration>
           <transformers>
             <transformer>
-              <mainClass>CIBGrp5.App</mainClass>
+              <mainClass>CIBGrp5.TestCluster</mainClass>
             </transformer>
           </transformers>
         </configuration>
