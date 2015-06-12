@@ -21,7 +21,7 @@ public class Updater {
 	address_list.add(address);
 	
 	ClientConfig clientConfig = new ClientConfig();
-	clientConfig.getGroupConfig().setName("d2").setPassword("d2");
+	clientConfig.getGroupConfig().setName("d1").setPassword("d1");
 	clientConfig.getNetworkConfig().setAddresses(address_list);
 	
 	hzInstance = HazelcastClient.newHazelcastClient(clientConfig);	

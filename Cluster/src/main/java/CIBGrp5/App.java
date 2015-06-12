@@ -10,14 +10,16 @@ public class App {
 
     // private static final String TARGET = "128.199.169.148:5701";
     // private static final String TARGET = "10.242.159.23:5701";
-    private static final String TARGET = "localhost:5702";
+    private static final String TARGET = "localhost:5701";
+    private static HazelcastInstance Instance;
     
     public static void main( String[] args ) {
 	Config cfg = new Config();
 	cfg.getGroupConfig()
-	    .setName("d1")
-	    .setPassword("d1");
+	    .setName("d2")
+	    .setPassword("d2");
 	NetworkConfig netcfg = new NetworkConfig();
+	netcfg.setPort(5702);
 	JoinConfig join = netcfg.getJoin();
 	join.getMulticastConfig()
 	    .setEnabled(true);
@@ -28,7 +30,7 @@ public class App {
 
 	Updater.setTargetCluster(TARGET);
 	
-	HazelcastInstance Instance = Hazelcast.newHazelcastInstance(cfg);
+	Instance = Hazelcast.newHazelcastInstance(cfg);
 
 	// Map
 	IMap<Integer, Long> map = Instance.getMap("timestamp");
@@ -36,6 +38,7 @@ public class App {
 	map.put( 1, num );
 	map.addEntryListener(new myEntryListener(), true);
 	System.out.println("EntryListener registered");
+	
 	
 
 	// System.out.println( "Customer with key 1: " + map.get(1) );
@@ -51,18 +54,34 @@ public class App {
 	// System.out.println( "queue size: " + q.size() );
     }
 
+    public static boolean updateIsLocal(Member member){
+	for(m : Instance.getCluster().getMembers()){
+	    if(m == member) {
+		return true;
+	    }
+	    else {
+		continue;
+	    }
+	}
+	return false;
+    }
+
     private static class myEntryListener implements EntryListener<Integer, Long> {
 	    
 	@Override
 	public void entryAdded(EntryEvent<Integer, Long> event) {
 	    System.out.println("entryAdded:" + event);
-	    Updater.getInstance().updateAdd(event);
+	    if(updateIsLocal(event.getMember())){
+		Updater.getInstance().updateAdd(event);
+	    }
 	}
 
 	@Override
 	public void entryRemoved(EntryEvent<Integer, Long> event) {
 	    System.out.println("entryRemoved:" + event);
-	    Updater.getInstance().updateRemove(event);
+	    if(updateIsLocal(event.getMember())){
+		Updater.getInstance().updateRemove(event);
+	    }
 	}
 
 	@Override
