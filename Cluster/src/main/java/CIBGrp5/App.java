@@ -7,31 +7,37 @@ import java.util.Map;
 import java.util.Queue;
 
 public class App {
+
+    // private static final String TARGET = "128.199.169.148:5701";
+    // private static final String TARGET = "10.242.159.23:5701";
+    private static final String TARGET = "localhost:5702";
+    
     public static void main( String[] args ) {
 	Config cfg = new Config();
-	// cfg.getGroupConfig()
-	//     .setName("altarf")
-	//     .setPassword("altarf-pass");
+	cfg.getGroupConfig()
+	    .setName("d1")
+	    .setPassword("d1");
 	NetworkConfig netcfg = new NetworkConfig();
 	JoinConfig join = netcfg.getJoin();
 	join.getMulticastConfig()
-	    .setEnabled(false);
+	    .setEnabled(true);
 	join.getTcpIpConfig()
-	    .addMember("128.199.169.148:5701")
-	    .setEnabled(true); // addr to fill
+	    .setEnabled(false) // addr to fill
+	    .addMember(TARGET);
 	cfg.setNetworkConfig(netcfg);
 
-	Updater.setTargetCluster("127.0.0.1:5701");
+	Updater.setTargetCluster(TARGET);
 	
 	HazelcastInstance Instance = Hazelcast.newHazelcastInstance(cfg);
 
 	// Map
 	IMap<Integer, Long> map = Instance.getMap("timestamp");
 	long num = 1;
+	map.put( 1, num );
 	map.addEntryListener(new myEntryListener(), true);
 	System.out.println("EntryListener registered");
 	
-	map.put( 1, num );
+
 	// System.out.println( "Customer with key 1: " + map.get(1) );
 	// System.out.println( "Map Size:" + map.size() );
 
@@ -46,19 +52,17 @@ public class App {
     }
 
     private static class myEntryListener implements EntryListener<Integer, Long> {
-
-	private static Updater u = Updater.getInstance();
 	    
 	@Override
 	public void entryAdded(EntryEvent<Integer, Long> event) {
 	    System.out.println("entryAdded:" + event);
-	    u.updateAdd(event);
+	    Updater.getInstance().updateAdd(event);
 	}
 
 	@Override
 	public void entryRemoved(EntryEvent<Integer, Long> event) {
 	    System.out.println("entryRemoved:" + event);
-	    u.updateRemove(event);
+	    Updater.getInstance().updateRemove(event);
 	}
 
 	@Override

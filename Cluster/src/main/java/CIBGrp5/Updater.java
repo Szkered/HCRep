@@ -17,14 +17,12 @@ public class Updater {
 
     private Updater(String address) {
     	// init updater
-	ClientConfig clientConfig = new ClientConfig();
-	ClientNetworkConfig netcfg = new ClientNetworkConfig();
 	List<String> address_list = new ArrayList<String>();
-
 	address_list.add(address);
-	// address_list.add("128.199.169.148:5702"); // connect to Droplet
-	netcfg.setAddresses(address_list);
-	clientConfig.setNetworkConfig(netcfg);
+	
+	ClientConfig clientConfig = new ClientConfig();
+	clientConfig.getGroupConfig().setName("d2").setPassword("d2");
+	clientConfig.getNetworkConfig().setAddresses(address_list);
 	
 	hzInstance = HazelcastClient.newHazelcastClient(clientConfig);	
     }
@@ -36,7 +34,6 @@ public class Updater {
 	else {}
 	return instance;
     }
-    
 
     public static void setTargetCluster(String address) {
 	System.out.println("[info] (" + Updater.class.getSimpleName() + " setTargetCluster) -> " + address);
@@ -46,6 +43,7 @@ public class Updater {
     public void updateAdd(EntryEvent ee) {
 	IMap map = hzInstance.getMap(ee.getName());
 	System.out.println("updating " + map);
+	map.put(ee.getKey(), ee.getValue());
 	// q.offer((String) ee.getItem());
     }
 

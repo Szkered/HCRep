@@ -12,19 +12,18 @@ import java.util.List;
 public class App {
     
     public static void main( String[] args ){
+	ArrayList<String> address_list = new ArrayList<String>();
+	address_list.add("127.0.0.1:5701");
+	
 	ClientConfig clientConfig = new ClientConfig();
-	ClientNetworkConfig netcfg = new ClientNetworkConfig();
-    
-	List<String> address_list = new ArrayList<String>();
-	// address_list.add("169.108.136.42:5701");
-	address_list.add("127.0.0.1:5701"); // connect to local Cluster
-
-	netcfg.setAddresses(address_list);
-	clientConfig.setNetworkConfig(netcfg);
+	clientConfig.getGroupConfig().setName("d1").setPassword("d1");
+	clientConfig.getNetworkConfig().setAddresses(address_list);
+	
 	HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
-	//"169.108.136.42:5701"
-        IMap map = client.getMap( "customers" );
-	// map.put(4, "D");
+
+        IMap map = client.getMap( "timestamp" );
+	long num = 1;
+	map.put(4, num);
 	System.out.println( "Map Size:" + map.size() );
 	System.out.println(map.get(4));
     }
