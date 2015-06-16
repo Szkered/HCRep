@@ -1,11 +1,6 @@
 <hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config/hazelcast-basic.xsd"
     xmlns="http://www.hazelcast.com/schema/config"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  
-    <group>
-        <name>d1</name>
-        <password>d1</password>
-    </group>
 
     <network>
         <port auto-increment="true">5701</port>
@@ -17,14 +12,15 @@
             <tcp-ip enabled="false">
             </tcp-ip>
         </join>
-        <interfaces enabled="false">
-            <interface>192.168.0.*</interface>            
-        </interfaces>
     </network>
 
-    <map name="testMap">
-	<merge-policy>com.hazelcast.map.merge.LatestUpdateMapMergePolicy
-	</merge-policy>
-    </map>
+    <!-- <map name="testMap"> -->
+    <!-- 	<merge-policy>com.hazelcast.map.merge.LatestUpdateMapMergePolicy -->
+    <!-- 	</merge-policy> -->
+    <!-- </map> -->
+    
+    <!-- <executor-service name="exec"> -->
+    <!--   <pool-size>1</pool-size> -->
+    <!-- </executor-service> -->
     
 </hazelcast>

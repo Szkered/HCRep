@@ -16,8 +16,11 @@ public class App {
 	address_list.add("127.0.0.1:5701");
 	
 	ClientConfig clientConfig = new ClientConfig();
-	clientConfig.getGroupConfig().setName("d1").setPassword("d1");
-	clientConfig.getNetworkConfig().setAddresses(address_list);
+	clientConfig.getGroupConfig().
+	    setName("singapore").
+	    setPassword("singapore");
+	clientConfig.getNetworkConfig().
+	    setAddresses(address_list);
 	
 	HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
 
