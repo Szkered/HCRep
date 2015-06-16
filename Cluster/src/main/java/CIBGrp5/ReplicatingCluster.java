@@ -15,9 +15,8 @@ import java.net.UnknownHostException;
 public class ReplicatingCluster{
     private String ip;
     private ClusterConfig clusterConfig;
-    private ReplicationService replicationService = new MapReplicationServiceImpl();
-    private List<String> instanceNames = new ArrayList<String2>();
-    private List<String> replicatorNames = new ArrayList<String>();
+    private ReplicationService replicationService;
+    private List<String> instanceNames = new ArrayList<String>();
     
     public ReplicatingCluster(){
 	try{
@@ -31,18 +30,17 @@ public class ReplicatingCluster{
     }
     
     public void startInstance(String instanceName){
-	this.clusterConfig.config.setInstanceName(instanceName);
-	Hazelcast.newHazelcastInstance(this.clusterConfig.config);
+	this.clusterConfig.getConfig().setInstanceName(instanceName);
+	Hazelcast.newHazelcastInstance(this.clusterConfig.getConfig());
 	this.instanceNames.add(instanceName);
     }
 
     public void startReplicationService(){
-	ArrayList<DistributedDAO> targetDAOs = new ArrayList<DistributedDAO>();
-	for(ClientConfig config : this.clusterConfig.replicationTargetConfigs){
+	List<MapDAO> targetDAOs = new ArrayList<MapDAO>();
+	for(ClientConfig config : this.clusterConfig.getReplicationTargetConfigs()){
 	    HazelcastInstance replicationTarget =
 		HazelcastClient.newHazelcastClient(config);
 	    targetDAOs.add(new MapDAOImpl(replicationTarget));
-	    this.replicatorNames.add(replicationTarget.getName());
 	}
 	this.replicationService = new MapReplicationServiceImpl(targetDAOs);
     }

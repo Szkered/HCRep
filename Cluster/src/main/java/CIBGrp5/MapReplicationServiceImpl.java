@@ -7,30 +7,36 @@ import java.util.ArrayList;
 
 public class MapReplicationServiceImpl implements ReplicationService{
 
-    private List<DistributedDAO> targetDAOs;
+    private List<MapDAO> targetDAOs;
     private EntryListener<Object, Object> mapListener = new MapListener();
 
-    public MapReplicationServiceImpl(List<DistributedDAO> targetDAOs){
+    public MapReplicationServiceImpl(List<MapDAO> targetDAOs){
 	this.targetDAOs = targetDAOs;
-	for(MapDAOImpl dao : targetDAOs){
+	for(MapDAO dao : targetDAOs){
 	    dao.addListener(mapListener);
 	}
     }
 
     public void replicate(EntryEvent<Object, Object> event){
-	for(DistributedDAO dao : targetDAOs){
+	for(MapDAO dao : targetDAOs){
 	    this.parseEvent(event, dao);
 	}
     }
     
-    public void parseEvent(EntryEvent<Object, Object> event, DistributedDAO dao){
+    public void parseEvent(EntryEvent<Object, Object> event, MapDAO dao){
 	switch(event.getEventType()){
-	case EntryEvent.ADDED:
-	    dao.create(event.getName(), event.getKey(), event.getValue());
-	case EntryEvent.UPDATED:
-	    dao.update(event.getName(), event.getKey(), event.getValue());
-	case EntryEvent.REMOVED:
-	    dao.remove(event.getName(), event.getKey(), event.getValue());
+
+	    /**
+	     *  Critical BUG here, need to specify whether to replicate
+	     *
+	     */
+	    
+	case ADDED:
+	    dao.create(event.getName(), event.getKey(), event.getValue(), true);
+	case UPDATED:
+	    dao.update(event.getName(), event.getKey(), event.getValue(), true);
+	case REMOVED:
+	    dao.delete(event.getName(), event.getKey());
 	}
     }
 
@@ -67,13 +73,17 @@ public class MapReplicationServiceImpl implements ReplicationService{
 	@Override
 	public void mapEvicted(MapEvent event) {
 	    System.out.println("[INFO] " + event);
-	    MapReplicationServiceImpl.this.replicate(event);
+	    /**
+	     *   TO-DO
+	     *
+	     */
+	    // MapReplicationServiceImpl.this.replicate(event);
 	}
         
 	@Override
 	public void mapCleared(MapEvent event) {
 	    System.out.println("[INFO] " + event);
-	    MapReplicationServiceImpl.this.replicate(event);
+	    // MapReplicationServiceImpl.this.replicate(event);
 	}
     }
 }

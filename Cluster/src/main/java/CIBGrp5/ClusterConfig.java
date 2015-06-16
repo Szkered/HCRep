@@ -14,9 +14,17 @@ public class ClusterConfig{
 	this.config = config;
 	return this;
     }
+
+    public Config getConfig(){
+	return this.config;
+    }
     
     public ClusterConfig addReplicationTargetConfig(ClientConfig replicationTargetConfig){
 	this.replicationTargetConfigs.add(replicationTargetConfig);
 	return this;
+    }
+
+    public List<ClientConfig> getReplicationTargetConfigs(){
+	return this.replicationTargetConfigs;
     }
 }

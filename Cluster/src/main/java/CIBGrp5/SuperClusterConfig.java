@@ -10,12 +10,12 @@ public class SuperClusterConfig{
     private List<Cluster> clusters = new ArrayList<Cluster>();
 
     private class Cluster{
-	public String ip;
+	public String address;
 	public String name;
 	public String password;
 
-	public Cluster(String ip, String name, String password){
-	    this.ip = ip;
+	public Cluster(String address, String name, String password){
+	    this.address = address;
 	    this.name = name;
 	    this.password = password;
 	}
@@ -27,21 +27,21 @@ public class SuperClusterConfig{
 	this.clusters.add(new Cluster("", "nyc", "nyc_pass"));
     }
 
-    public static ClusterConfig getClusterConfig(String ip){
+    public ClusterConfig getClusterConfig(String address){
 	ClusterConfig clusterConfig = new ClusterConfig();
 	for(Cluster cluster : clusters){
-	    if(cluster.ip == ip){
+	    if(cluster.address == address){
 		clusterConfig.
 		    setConfig(getConfig(cluster.name, cluster.password));
 	    }else{
 		clusterConfig.
-		    addReplicationTargetConfig(getReplicationTargetConfig
-					       (cluster.name, cluster.password));
+		    addReplicationTargetConfig(generateReplicationTargetConfig
+					       (cluster.name, cluster.password, cluster.address));
 	    }
 	}
     }
 
-    public static Config getConfig(String name, String password){
+    public Config getConfig(String name, String password){
 	Config config = new Config();
 	config.getGroupConfig()
 	    .setName(name)
@@ -49,12 +49,13 @@ public class SuperClusterConfig{
 	return config;
     }
     
-    public static ClientConfig getReplicationTargetConfig
+    public ClientConfig generateReplicationTargetConfig
 	(String name, String password, String address){
 	List<String> addresses = new ArrayList<String>();
 	addresses.add(address);
 	ClientConfig replicationTargetConfig = new ClientConfig();
-	replicationTargetConfig.setInstanceName(name);
+	// this doesn't work!
+	// replicationTargetConfig.setInstanceName(name);
 	replicationTargetConfig.getGroupConfig().
 	    setName(name).
 	    setPassword(password);

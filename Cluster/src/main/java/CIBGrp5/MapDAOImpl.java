@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.io.Serializable;
 
-public class MapDAOImpl implements DistributedDAO {
+public class MapDAOImpl implements MapDAO {
 
     private HazelcastInstance instance;
     private IExecutorService ex;
@@ -35,7 +35,7 @@ public class MapDAOImpl implements DistributedDAO {
     public boolean create(String name, Object key, Object value, Boolean replicate){
 	Future<Boolean> result =
 	    this.ex.submitToKeyOwner(new MapDAOTask
-				     (EntryEventType.ADDED, name, key, value, replicate));
+				     (EntryEventType.ADDED, name, key, value, replicate), key);
 	return result.get();
     }
     
@@ -47,7 +47,7 @@ public class MapDAOImpl implements DistributedDAO {
     public boolean update(String name, Object key, Object value, Boolean replicate){
 	Future<Boolean> result =
 	    this.ex.submitToKeyOwner(new MapDAOTask
-				     (EntryEventType.UPDATED, name, key, value, replicate));
+				     (EntryEventType.UPDATED, name, key, value, replicate), key);
 	return result.get();
     }
 
@@ -59,7 +59,7 @@ public class MapDAOImpl implements DistributedDAO {
     public boolean delete(String name, Object key){
 	Future<Boolean> result =
 	    this.ex.submitToKeyOwner(new MapDAOTask
-				     (EntryEventType.REMOVED, name, key, value, true));
+				     (EntryEventType.REMOVED, name, key, null, true), key);
 	return result.get();
     }
 
@@ -93,11 +93,11 @@ public class MapDAOImpl implements DistributedDAO {
 	    switch(this.type){
 	    case ADDED:
 		map.set(this.key, this.value);
-		map.addEntryListener(MapDAOImpl.this.mapListener);
+		map.addEntryListener(MapDAOImpl.this.mapListener, true);
 	    case UPDATED:
 		map.put(this.key, this.value);
 		if(this.replicate){
-		    map.addEntryListener(MapDAOImpl.this.mapListener);
+		    map.addEntryListener(MapDAOImpl.this.mapListener, true);
 		}
 	    case REMOVED:
 		map.delete(this.key);

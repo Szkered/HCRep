@@ -4,6 +4,6 @@ import com.hazelcast.core.*;
 
 public interface ReplicationService{
     
-    public void replicate();
+    public void replicate(EntryEvent<Object, Object> event);
     
 }
