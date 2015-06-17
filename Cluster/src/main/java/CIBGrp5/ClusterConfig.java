@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ClusterConfig{
-    private Config config;
+    private Config config = null;
     private List<ClientConfig> replicationTargetConfigs = new ArrayList<ClientConfig>();
+
+    public ClusterConfig(){}
 
     public ClusterConfig setConfig(Config config){
 	this.config = config;

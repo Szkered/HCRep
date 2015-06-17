@@ -36,7 +36,19 @@ public class MapDAOImpl implements MapDAO {
 	Future<Boolean> result =
 	    this.ex.submitToKeyOwner(new MapDAOTask
 				     (EntryEventType.ADDED, name, key, value, replicate), key);
-	return result.get();
+	try {
+	    return result.get();
+	}
+	catch (InterruptedException e) {
+	    System.out.println("Error " + e.getMessage());
+	    e.printStackTrace();
+	    return false;
+	}
+	catch(ExecutionException e){
+	    System.out.println("Error " + e.getMessage());
+	    e.printStackTrace();
+	    return false;
+	}
     }
     
     public Object read(String name, Object key){
@@ -48,7 +60,19 @@ public class MapDAOImpl implements MapDAO {
 	Future<Boolean> result =
 	    this.ex.submitToKeyOwner(new MapDAOTask
 				     (EntryEventType.UPDATED, name, key, value, replicate), key);
-	return result.get();
+	try{
+	    return result.get();	    
+	}
+	catch(InterruptedException e){
+	    System.out.println("Error " + e.getMessage());
+	    e.printStackTrace();
+	    return false;
+	}
+	catch(ExecutionException e){
+	    System.out.println("Error " + e.getMessage());
+	    e.printStackTrace();
+	    return false;
+	}
     }
 
 
@@ -60,7 +84,19 @@ public class MapDAOImpl implements MapDAO {
 	Future<Boolean> result =
 	    this.ex.submitToKeyOwner(new MapDAOTask
 				     (EntryEventType.REMOVED, name, key, null, true), key);
-	return result.get();
+	try {
+	    return result.get();
+	}
+	catch (InterruptedException e) {
+	    System.out.println("Error " + e.getMessage());
+	    e.printStackTrace();
+	    return false;
+	}
+	catch(ExecutionException e){
+	    System.out.println("Error " + e.getMessage());
+	    e.printStackTrace();
+	    return false;
+	}
     }
 
     private class MapDAOTask

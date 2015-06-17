@@ -13,20 +13,21 @@ import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
 public class ReplicatingCluster{
-    private String ip;
+    private String address;
     private ClusterConfig clusterConfig;
     private ReplicationService replicationService;
     private List<String> instanceNames = new ArrayList<String>();
     
     public ReplicatingCluster(){
 	try{
-	    this.ip = Inet4Address.getLocalHost().getHostAddress();	    
+	    this.address = Inet4Address.getLocalHost().getHostAddress();	    
 	}
 	catch (UnknownHostException e){
 	    System.out.println("Error " + e.getMessage());
 	    e.printStackTrace();
 	}
-	this.clusterConfig = new SuperClusterConfig().getClusterConfig(this.ip);
+	SuperClusterConfig s = new SuperClusterConfig();
+	this.clusterConfig = s.getClusterConfig(this.address);
     }
     
     public void startInstance(String instanceName){

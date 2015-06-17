@@ -22,26 +22,27 @@ public class SuperClusterConfig{
     }
 
     public SuperClusterConfig(){
-	this.clusters.add(new Cluster("128.199.169.148", "singapore", "singapore_pass"));
-	this.clusters.add(new Cluster("", "london", "london_pass"));
+	this.clusters.add(new Cluster("10.242.128.100", "singapore", "singapore_pass"));
+	this.clusters.add(new Cluster("128.199.169.148", "london", "london_pass"));
 	this.clusters.add(new Cluster("", "nyc", "nyc_pass"));
     }
 
     public ClusterConfig getClusterConfig(String address){
 	ClusterConfig clusterConfig = new ClusterConfig();
 	for(Cluster cluster : clusters){
-	    if(cluster.address == address){
+	    if(cluster.address.equals(address)){
 		clusterConfig.
-		    setConfig(getConfig(cluster.name, cluster.password));
+		    setConfig(generateConfig(cluster.name, cluster.password));
 	    }else{
 		clusterConfig.
 		    addReplicationTargetConfig(generateReplicationTargetConfig
 					       (cluster.name, cluster.password, cluster.address));
 	    }
 	}
+	return clusterConfig;
     }
 
-    public Config getConfig(String name, String password){
+    public Config generateConfig(String name, String password){
 	Config config = new Config();
 	config.getGroupConfig()
 	    .setName(name)
