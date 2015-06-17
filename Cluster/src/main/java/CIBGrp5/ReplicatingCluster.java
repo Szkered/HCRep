@@ -9,8 +9,15 @@ import java.util.Map;
 import java.util.List;
 import java.util.Queue;
 import java.util.ArrayList;
+
+import java.util.Enumeration;
+import java.net.InetAddress;
 import java.net.Inet4Address;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+
+
 
 public class ReplicatingCluster{
     private String address;
@@ -19,13 +26,7 @@ public class ReplicatingCluster{
     private List<String> instanceNames = new ArrayList<String>();
     
     public ReplicatingCluster(){
-	try{
-	    this.address = Inet4Address.getLocalHost().getHostAddress();	    
-	}
-	catch (UnknownHostException e){
-	    System.out.println("Error " + e.getMessage());
-	    e.printStackTrace();
-	}
+	this.address = getMachineIP();
 	SuperClusterConfig s = new SuperClusterConfig();
 	this.clusterConfig = s.getClusterConfig(this.address);
     }
@@ -44,6 +45,27 @@ public class ReplicatingCluster{
 	    targetDAOs.add(new MapDAOImpl(replicationTarget));
 	}
 	this.replicationService = new MapReplicationServiceImpl(targetDAOs);
+    }
+
+    public String getMachineIP(){
+	try {
+	    Enumeration e = NetworkInterface.getNetworkInterfaces();
+	    while(e.hasMoreElements()){
+		NetworkInterface n = (NetworkInterface) e.nextElement();
+		Enumeration ee = n.getInetAddresses();
+		while (ee.hasMoreElements()){
+		    InetAddress i = (InetAddress) ee.nextElement();
+		    if(i instanceof Inet4Address && !i.getHostAddress().equals("127.0.0.1")){
+			return i.getHostAddress();
+		    }
+		}
+	    }
+	}
+	catch (SocketException e) {
+	    System.out.println("Error " + e.getMessage());
+	    e.printStackTrace();
+	}
+	return null;
     }
 
 }
