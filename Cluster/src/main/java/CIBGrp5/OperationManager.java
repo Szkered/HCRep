@@ -38,7 +38,7 @@ public class OperationManager{
 	 *  DEBUG
 	 *
 	 */
-	HazelcastInstance i = .getHazelcastInstanceByName("master-node");
+	HazelcastInstance i = Hazelcast.getHazelcastInstanceByName("master-node");
 	i.getMap("timestamp").addEntryListener(mapReplicationService.getMapListener());
     }
 
