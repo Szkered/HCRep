@@ -1,29 +1,37 @@
 package CIBGrp5;
 
 import com.hazelcast.core.*;
+import com.hazelcast.client.*;
+import com.hazelcast.client.config.*;
 
 import java.util.List;
 import java.util.ArrayList;
 
-public class MapReplicationServiceImpl implements ReplicationService{
+public class MapReplicationServiceImpl implements MapReplicationService{
 
-    private List<MapDAO> targetDAOs;
+    /**
+     *  BUG HERE! MapDAO incompatible with MapDAOImpl
+     *
+     */
+    private List<MapDAOImpl> targetDAOs = new ArrayList<MapDAOImpl>();
     private EntryListener<Object, Object> mapListener = new MapListener();
 
-    public MapReplicationServiceImpl(List<MapDAO> targetDAOs){
-	this.targetDAOs = targetDAOs;
-	for(MapDAO dao : targetDAOs){
-	    dao.addListener(mapListener);
+    public MapReplicationServiceImpl(List<ClientConfig> replicationTargetConfigs){
+	for(ClientConfig clientConfig : replicationTargetConfigs){
+	    MapDAOImpl dao = new MapDAOImpl(HazelcastClient.newHazelcastClient(clientConfig));
+	    targetDAOs.add(dao);
+	    dao.setMapListener(mapListener);
 	}
     }
 
+    @Override
     public void replicate(EntryEvent<Object, Object> event){
-	for(MapDAO dao : targetDAOs){
+	for(MapDAOImpl dao : targetDAOs){
 	    this.parseEvent(event, dao);
 	}
     }
-    
-    public void parseEvent(EntryEvent<Object, Object> event, MapDAO dao){
+
+    public void parseEvent(EntryEvent<Object, Object> event, MapDAOImpl dao){
 	switch(event.getEventType()){
 
 	    /**
@@ -40,8 +48,8 @@ public class MapReplicationServiceImpl implements ReplicationService{
 	}
     }
 
-    public EntryListener getEntryListener(){
-	return mapListener;
+    public EntryListener getMapListener(){
+	return this.mapListener;
     }
     
     

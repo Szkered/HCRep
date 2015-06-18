@@ -22,9 +22,9 @@ public class SuperClusterConfig{
     }
 
     public SuperClusterConfig(){
-	this.clusters.add(new Cluster("10.242.128.100", "singapore", "singapore_pass"));
+	this.clusters.add(new Cluster("10.21.114.35", "singapore", "singapore_pass"));
 	this.clusters.add(new Cluster("128.199.169.148", "london", "london_pass"));
-	this.clusters.add(new Cluster("", "nyc", "nyc_pass"));
+	// this.clusters.add(new Cluster("", "nyc", "nyc_pass"));
     }
 
     public ClusterConfig getClusterConfig(String address){
