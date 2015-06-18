@@ -1,3 +1,4 @@
+
 package CIBGrp5;
 
 import com.hazelcast.config.*;
@@ -22,8 +23,8 @@ public class SuperClusterConfig{
     }
 
     public SuperClusterConfig(){
-	this.clusters.add(new Cluster("128.199.196.187", "singapore", "singapore_pass"));
-	this.clusters.add(new Cluster("128.199.169.148", "london", "london_pass"));
+	this.clusters.add(new Cluster("128.199.169.148", "singapore", "singapore_pass"));
+	this.clusters.add(new Cluster("178.62.17.188", "london", "london_pass"));
 	// this.clusters.add(new Cluster("", "nyc", "nyc_pass"));
     }
 
