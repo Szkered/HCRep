@@ -39,7 +39,7 @@ public class OperationManager{
 	 *
 	 */
 	HazelcastInstance i = Hazelcast.getHazelcastInstanceByName("master-node");
-	i.getMap("timestamp").addEntryListener(mapReplicationService.getMapListener());
+	i.getMap("timestamp").addEntryListener(mapReplicationService.getMapListener(), true);
     }
 
     public static String getMachineIP(){
