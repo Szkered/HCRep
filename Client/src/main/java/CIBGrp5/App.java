@@ -31,8 +31,8 @@ public class App {
         IMap map = client.getMap( "timestamp" );
 	long num = 1;
 	System.out.println( "Map Size:" + map.size() );
-	// map.put(4, num);
-	// System.out.println( "Map Size:" + map.size() );
+	map.put(4, num);
+	System.out.println( "Map Size:" + map.size() );
 	System.out.println(map.get(4));
     }
 

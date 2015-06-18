@@ -77,7 +77,11 @@ public class MapDAOImpl implements MapDAO {
 	return this.submitDAOTask(EntryEventType.REMOVED, name, key, null, false);
     }
 
-    private class MapDAOTask
+    /**
+     *  BUG!
+     *
+     */
+    public class MapDAOTask
 	implements Callable<Boolean>, Serializable, HazelcastInstanceAware{
 	
 	private EntryEventType type;
