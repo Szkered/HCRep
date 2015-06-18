@@ -78,7 +78,7 @@ public class MapDAOImpl implements MapDAO {
     }
 
     /**
-     *  BUG!
+     * 
      *
      */
     public class MapDAOTask
@@ -86,13 +86,13 @@ public class MapDAOImpl implements MapDAO {
 		   // Serializable,
 		   HazelcastInstanceAware{
 	
-	private EntryEventType type;
-	private String name;
-	private Object key;
-	private Object value;
-	private Boolean replicate;
+	private final EntryEventType type;
+	private final String name;
+	private final Object key;
+	private final Object value;
+	private final Boolean replicate;
 	private HazelcastInstance instance;
-	private EntryListener mapListener;
+	private final EntryListener mapListener;
 	
 	public MapDAOTask(EntryEventType type,
 			  String name,
