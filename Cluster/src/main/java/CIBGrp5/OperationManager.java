@@ -23,18 +23,23 @@ public class OperationManager{
     private static List<String> instanceNames = new ArrayList<String>();
     private static MapReplicationService mapReplicationService;
     
-    public static void startInstance(String instanceName){
+    public static HazelcastInstance startInstance(String instanceName){
 	Config config = s.getClusterConfig(getMachineIP()).getConfig();
 	config.setInstanceName(instanceName);
-	Hazelcast.newHazelcastInstance(config);
 	instanceNames.add(instanceName);
+	return Hazelcast.newHazelcastInstance(config);
     }
 
     public static void startReplicationService(){
-
 	mapReplicationService =
 	    new MapReplicationServiceImpl(s.getClusterConfig(getMachineIP()).
 					  getReplicationTargetConfigs());
+	/**
+	 *  DEBUG
+	 *
+	 */
+	HazelcastInstance i = .getHazelcastInstanceByName("master-node");
+	i.getMap("timestamp").addEntryListener(mapReplicationService.getMapListener());
     }
 
     public static String getMachineIP(){

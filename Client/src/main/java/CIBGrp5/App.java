@@ -13,12 +13,16 @@ public class App {
     
     public static void main( String[] args ){
 	ArrayList<String> address_list = new ArrayList<String>();
-	address_list.add("127.0.0.1:5701");
+	// address_list.add("128.199.169.148:5701");
+	address_list.add("178.62.17.188:5701");
 	
 	ClientConfig clientConfig = new ClientConfig();
+	// clientConfig.getGroupConfig().
+	//     setName("singapore").
+	//     setPassword("singapore_pass");
 	clientConfig.getGroupConfig().
-	    setName("singapore").
-	    setPassword("singapore");
+	    setName("london").
+	    setPassword("london_pass");
 	clientConfig.getNetworkConfig().
 	    setAddresses(address_list);
 	
@@ -26,8 +30,9 @@ public class App {
 
         IMap map = client.getMap( "timestamp" );
 	long num = 1;
-	map.put(4, num);
 	System.out.println( "Map Size:" + map.size() );
+	// map.put(4, num);
+	// System.out.println( "Map Size:" + map.size() );
 	System.out.println(map.get(4));
     }
 
