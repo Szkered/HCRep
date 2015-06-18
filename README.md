@@ -1,4 +1,4 @@
-# Hazelcast-CIBGrp5
+# HCRep
 
 ## Basic survival skills in mavenland
 
