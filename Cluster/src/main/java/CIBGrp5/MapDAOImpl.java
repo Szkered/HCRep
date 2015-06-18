@@ -82,7 +82,9 @@ public class MapDAOImpl implements MapDAO {
      *
      */
     public class MapDAOTask
-	implements Callable<Boolean>, Serializable, HazelcastInstanceAware{
+	implements Callable<Boolean>,
+		   // Serializable,
+		   HazelcastInstanceAware{
 	
 	private EntryEventType type;
 	private String name;
