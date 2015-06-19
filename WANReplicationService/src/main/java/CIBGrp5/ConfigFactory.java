@@ -27,7 +27,7 @@ public class ConfigFactory{
     public ConfigFactory(){
 	this.clusters.add(new Cluster("199.253.242.3", "singapore", "singapore_pass"));
 	this.clusters.add(new Cluster("128.199.169.148", "london", "london_pass"));
-	this.clusters.add(new Cluster("45.55.74.252", "nyc", "nyc_pass"));
+	// this.clusters.add(new Cluster("45.55.74.252", "nyc", "nyc_pass"));
 	this.address = this.getPublicIP();
 	this.generateClusterConfig();
     }
