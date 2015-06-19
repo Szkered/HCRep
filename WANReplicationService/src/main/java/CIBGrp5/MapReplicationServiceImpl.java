@@ -4,56 +4,33 @@ import com.hazelcast.core.*;
 import com.hazelcast.client.*;
 import com.hazelcast.client.config.*;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 public class MapReplicationServiceImpl implements MapReplicationService{
 
-    /**
-     *  BUG HERE! MapDAO incompatible with MapDAOImpl
-     *
-     */
-    private List<MapDAOImpl> targetDAOs = new ArrayList<MapDAOImpl>();
-    private EntryListener<Object, Object> mapListener = new MapListener();
+    private List<HazelcastInstance> targets = new ArrayList<HazelcastInstance>();
+    private EntryListener<Object, Object> replicatingListener = new ReplicatingListener();
 
     public MapReplicationServiceImpl(List<ClientConfig> replicationTargetConfigs){
 	for(ClientConfig clientConfig : replicationTargetConfigs){
-	    MapDAOImpl dao = new MapDAOImpl(HazelcastClient.newHazelcastClient(clientConfig));
-	    targetDAOs.add(dao);
-	    dao.setMapListener(mapListener);
+	    HazelcastInstance target = HazelcastClient.newHazelcastClient(clientConfig);
+	    targets.add(target);
+	}
+    }
+
+    private void replicate(EntryEvent<Object, Object> event){
+	for(HazelcastInstance target : targets){
+	    IExecutorService ex = target.getExecutorService("exec");
+	    ex.submit(new ReplicateTask(event));
 	}
     }
 
     @Override
-    public void replicate(EntryEvent<Object, Object> event){
-	for(MapDAOImpl dao : targetDAOs){
-	    this.parseEvent(event, dao);
-	}
+    public EntryListener<Object, Object> getReplicatingListener(){
+	return this.replicatingListener;
     }
 
-    public void parseEvent(EntryEvent<Object, Object> event, MapDAOImpl dao){
-	switch(event.getEventType()){
-
-	    /**
-	     *  Critical BUG here, need to specify whether to replicate
-	     *
-	     */
-	    
-	case ADDED:
-	    dao.create(event.getName(), event.getKey(), event.getValue(), true);
-	case UPDATED:
-	    dao.update(event.getName(), event.getKey(), event.getValue(), true);
-	case REMOVED:
-	    dao.delete(event.getName(), event.getKey());
-	}
-    }
-
-    public EntryListener getMapListener(){
-	return this.mapListener;
-    }
-    
-    
-    private class MapListener implements EntryListener<Object, Object>{
+    private class ReplicatingListener implements EntryListener<Object, Object>{
 	@Override
 	public void entryAdded(EntryEvent<Object, Object> event) {
 	    System.out.println("[INFO] " + event);
@@ -78,13 +55,13 @@ public class MapReplicationServiceImpl implements MapReplicationService{
 	    MapReplicationServiceImpl.this.replicate(event);
 	}
 
+	/**
+	 *   TO-DO
+	 *
+	 */
 	@Override
 	public void mapEvicted(MapEvent event) {
 	    System.out.println("[INFO] " + event);
-	    /**
-	     *   TO-DO
-	     *
-	     */
 	    // MapReplicationServiceImpl.this.replicate(event);
 	}
         
